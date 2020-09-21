@@ -11,6 +11,9 @@
       <button class="primary-button" @click="gqlQuery()">
         Test apollo client
       </button>
+      <button class="primary-button" @click="fetchAll()">
+        Fetch all from database
+      </button>
       <router-view />
     </div>
     <div ref="docPlace" class="w-full">
@@ -50,6 +53,9 @@ export default {
       // e.preventDefault();
       const result = await DocsServices.getCWD();
       this.query = result.data.cwd;
+    },
+    fetchAll(){
+      this.$store.dispatch('fetchAll')
     },
     addDoc() {
       let ComponentClass = Vue.extend(DocEditor);

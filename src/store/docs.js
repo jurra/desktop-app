@@ -1,3 +1,8 @@
+/**
+ * This the doc level store that shows state related to 
+ * a single hardocs project
+ */
+
 // import Vuex from 'vuex'
 import DocsServices from '@/services/index';
 // import store from '@/store/'
