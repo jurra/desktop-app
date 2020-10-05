@@ -4,7 +4,7 @@
  * This includes document files, folder holding the documents, the html contents,
  * and other data related to documents.
  */
-
+import Vue from 'vue'
 import DocsServices from '@/services/index';
 import {
   // loadFilePathsFromSelectedFolder,
@@ -178,6 +178,13 @@ export const actions = {
     }
   },
 
+  updateDocContent({ state }, editedDoc) {
+    const newDoc = state.allDocs.find((doc) => doc.id == editedDoc.id);
+    newDoc.content = editedDoc.content;
+    newDoc.title = editedDoc.title;
+    // commit('UPDATE_DOC_CONTENT', newDoc)
+  },
+
   async addDoc({ state, commit, dispatch }) {
     // FIXME: Thi function and formatDocs are competing 
     function makeDoc() {
@@ -243,9 +250,12 @@ export const actions = {
     dispatch('writeFileRequest', newDoc);
   },
 
-  setSaved({commit},boolean){
-    if(!boolean){
+  setSaved({ commit, state }, boolean) {
+    if (!boolean) {
       commit('SET_TO_UNSAVED')
+    }
+    else {
+      commit('SET_TO_SAVED', state.currentDoc.id)
     }
   },
 
@@ -265,13 +275,18 @@ export const actions = {
 
 export const getters = {
   docIsSaved: state => {
-    // console.log("Getter for isSaved " + JSON.stringify(state.currentDoc))
-    console.log("Getter for isSaved  " + state.currentDoc.saved)
-    return state.currentDoc.saved
+    if (state.currentDoc) {
+      // console.log("Getter for isSaved " + JSON.stringify(state.currentDoc))
+      console.log("Getter for isSaved  " + state.currentDoc.saved)
+      return state.currentDoc.saved
+    }
+    else {
+      return null
+    }
   }
 }
 
-function formatDocs(response, gqlAction) {
+function formatDocs(response, gqlAction,{state}) {
   //Check if mutation exists or not
   console.log(response.data[gqlAction]);
   // FIXME: Use map instead of filter Clive suggestion...
@@ -291,10 +306,9 @@ function formatDocs(response, gqlAction) {
     regex = /(<([^>]+)>)/gi;
     doc.title = await doc.title.replace(regex, '').trim()
     // doc = Object.assign(doc,{ saved: true })
-    // doc.saved = true;
-    doc['saved'] = true
-    console.log("set saved" + doc.saved)
+    Vue.$set(state.currentDoc, 'saved', true)
+    // doc['saved'] = true
+    // console.log("set saved to: " + doc.saved)
   })
-
   return response.data[gqlAction].allDocsData
 }

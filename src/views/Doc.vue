@@ -41,9 +41,9 @@ export default {
     docId(){
       return this.$store.state.docs.currentDoc.id
     },
-  docContent(){
+    docContent(){
     return this.$store.state.docs.currentDoc.content
-  }
+    }
   },
 
   methods: {

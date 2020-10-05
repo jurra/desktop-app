@@ -1,5 +1,5 @@
 <template>
-  <div v-if="saved == false">
+  <div v-if="!isSaved" :key="componentKey">
     <button class="primary-button" @click="saveDocFile()">Save</button>
   </div>
 </template>
@@ -7,10 +7,12 @@
 export default {
   name: 'SaveFile',
   props: {
-    docId: Number
+    docId: Number,
+    docIsSaved: Boolean
   },
   data() {
     return {
+      componentKey: 1,
       dummy: {
         title: 'Name',
         description: 'akasdasd',
@@ -21,14 +23,25 @@ export default {
     };
   },
   computed: {
-    saved() {
-      return this.$store.state.docs.currentDoc.saved;
+    isSaved(){
+      console.log("Print computed property in SaveFile " + this.$store.state.docs.currentDoc.saved)
+      return this.$store.state.docs.currentDoc.saved
     }
   },
   methods: {
     saveDocFile() {
+      this.componentKey += 1 
       this.$store.dispatch('saveDocFile');
-      this.$store.commit('SET_TO_SAVED', this.$store.state.docs.currentDoc.id);
+      this.$store.dispatch('setSaved', true);
+    },
+    localDocIsSaved(){
+      return this.$store.state.docs.currentDoc.saved
+    }
+  },
+  watch:{
+    '$store.state.docs.currentDoc.saved': function(){
+      console.log("Whatching for save")
+      this.localDocIsSaved()
     }
   }
 };
