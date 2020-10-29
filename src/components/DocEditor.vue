@@ -242,6 +242,9 @@ export default {
             <br />
             – mom
           </blockquote>
+
+          <p>Testing out images</p>
+          <img src="../assets/profile.png" alt="my profile picture"/>
         `
     }
   },
