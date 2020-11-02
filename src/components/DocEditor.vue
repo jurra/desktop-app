@@ -299,7 +299,13 @@ export default {
             title: 'Untitled'
           });
         }
-      }
+      },
+      onPaste: (value) => {
+        // console.log(value.EditorView.docView)
+                console.log(value.docView.children)
+
+      },
+      onDrop: () => {},
     });
     this.editor.setContent(this.content);
   },
