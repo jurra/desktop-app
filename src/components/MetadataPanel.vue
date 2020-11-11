@@ -17,6 +17,16 @@
           }"
           :objData="data"
           :v-model="data"
+          :templatesData="{
+        selections: [
+          'No Template',
+          'Template a',
+          'Template b',
+          'Template c',
+        ],
+        template: null,
+        store: this.$store,
+      }"
           v-on:input="passDataFromEditor"
         ></JsonEditor>
       </div>
@@ -34,6 +44,9 @@ import { mapGetters, mapState } from 'vuex';
 export default {
   //   name:"JsonEditor",
   components: {},
+  created () {
+    this.$root.$on('template-selected', (event) => { this.showEvent(event) })
+  },
   data: function() {
     return {
       path: '',
@@ -66,7 +79,24 @@ export default {
     }
   },
   methods: {
-    // Listen to child emitted event to update the state based on new input
+    showEvent: function(event) {
+      console.log('showEvent: ' + JSON.stringify(event))
+      // this.templatesData.template
+      const templateData = {
+        name: event,
+        data: [
+          { name: 'wut', type: 'number', childParams: null, remark: 3 },
+          { name: 'quantity', type: 'string', childParams: null, remark: 'remarkable' },
+          // { quantity: 0 },
+          // { specifications: 'here a spec - longer?' }
+        ]
+      }
+
+      console.log ('new jsonData: ' + JSON.stringify(this.jsonData))
+      this.$root.$emit('template-returned', templateData)
+    },
+
+      // Listen to child emitted event to update the state based on new input
     async passDataFromEditor(input) {
       return this.$store.dispatch('updateDataset', input)
     }
