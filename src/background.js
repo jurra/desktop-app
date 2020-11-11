@@ -1,12 +1,14 @@
+/*eslint-disable*/
 'use strict';
 
-import { app, protocol, BrowserWindow } from 'electron';
+import { app, protocol, BrowserWindow, ipcMain, dialog } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, {
   VUEJS_DEVTOOLS,
   APOLLO_DEVELOPER_TOOLS
 } from 'electron-devtools-installer';
 
+global.vuexState = null
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 let win;
@@ -45,7 +47,53 @@ function createWindow() {
     win.loadURL('app://./index.html');
   }
 
+  function getUnsavedDocsStatus() {
+    return new Promise((resolve, reject) => {
+      ipcMain.on('hasUnsavedFiles', (e, res) => {
+        // console.log("Response from rendererer: " + res)
+        resolve(res)
+      })
+    });
+  }
+
+  win.on('close', async function (e) {
+    let hasUnsavedDocs = undefined
+    const prevent = e.preventDefault()
+    let closed = false
+    win.webContents.send('checkUnsavedDocs')
+    // let hasUnsavedDocsDocs = await getUnsavedDocsStatus()
+     await getUnsavedDocsStatus()
+      .then(isUnsaved => {
+        if (isUnsaved) {
+          const choice = dialog.showMessageBoxSync(this,
+            {
+              type: 'question',
+              buttons: ['Yes', 'No'],
+              title: 'Confirm',
+              message: 'You have unsaved documents. Are you sure you want to quit?'
+            })
+          if (choice === 1) {
+            console.log('Closing before entering this body')
+            hasUnsavedDocs = true
+            console.log("Response from rendererer: " + hasUnsavedDocs)
+          }
+          else{
+            closed = true
+            console.log("Set close to  " + closed)
+          }
+        }
+        else{
+          app.exit()
+        }
+      })
+      .then(hasUnsavedDocs && prevent)
+      .catch(error => console.log(error))
+      if(closed) app.exit()
+  });
+
   win.on('closed', () => {
+    // Send a message to get the state
+    // If ready to close, close, else cancel..
     win = null;
   });
 }
@@ -97,3 +145,5 @@ if (isDevelopment) {
     });
   }
 }
+
+
