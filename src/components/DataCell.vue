@@ -149,7 +149,7 @@ export default {
     loadTemplate(schemaFile){
       console.log("Testing event emit from child " + schemaFile)
       let template = buildsTemplate(this.$store.state.metadata.schemasDir + "\\", schemaFile)
-      console.log(template)
+      console.log('TEMPLATE: ' + JSON.stringify(template))
       this.json = template.fields
       this.code = YAML.stringify(template.fields)
     }

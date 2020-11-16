@@ -17,16 +17,7 @@
           }"
           :objData="data"
           :v-model="data"
-          :templatesData="{
-        selections: [
-          'No Template',
-          'Template a',
-          'Template b',
-          'Template c',
-        ],
-        template: null,
-        store: this.$store,
-      }"
+          :templatesData="templatesData"
           v-on:input="passDataFromEditor"
         ></JsonEditor>
       </div>
@@ -40,12 +31,13 @@
 // import DocsServices from '@/services/index';
 // import SchemasDir from '@/components/MetadataEdit__SchemasDir';
 import { mapGetters, mapState } from 'vuex';
+import { buildsTemplate } from '@/../__utils__/schemas.js'
 
 export default {
   //   name:"JsonEditor",
   components: {},
   created () {
-    this.$root.$on('template-selected', (event) => { this.showEvent(event) })
+    this.$root.$on('template-selected', (event) => { this.templateSelected(event) })
   },
   data: function() {
     return {
@@ -74,26 +66,90 @@ export default {
         return this.$store.commit('UPDATE_DATA_SET', newJsonData);
       }
     },
-    schemas() {
+    schemas: function () {
       return this.$store.state.metadata.schemasRef;
+    },
+    selections: function () {
+      return this.schemas.map (key => key.title)
+    },
+    templatesData: function () {
+      return {
+        selections: this.selections,
+        template: null, // *todo* likely not needed now
+        store: this.$store  // *todo* likely not needed now
+      }
     }
   },
   methods: {
-    showEvent: function(event) {
-      console.log('showEvent: ' + JSON.stringify(event))
-      // this.templatesData.template
-      const templateData = {
-        name: event,
-        data: [
-          { name: 'wut', type: 'number', childParams: null, remark: 3 },
-          { name: 'quantity', type: 'string', childParams: null, remark: 'remarkable' },
-          // { quantity: 0 },
-          // { specifications: 'here a spec - longer?' }
-        ]
-      }
+    buildTemplate: function (schemaData) {
+      console.log('buildTemplate: ' + JSON.stringify(schemaData))
+      const template = Object.keys(schemaData.fields).map (key => {
+        let value = schemaData.fields[key]
+        if (!value) {
+          switch (typeof value) {
+            case 'string':
+              value = key
+              break
+            case 'number':
+              value = 0
+              break
+            case 'boolean':
+              value = false
+              break
+            default:
+              break
+          }
+        }
+        // console.log('buildTemplate:key: ' + key + ': ' + value)
+        return {
+          name: key,
+          type: typeof value,
+          childParams: null,
+          remark: value
+        }
+      })
+      return template
+    },
+    templateSelected: function(event) {
+      // console.log('templateSelected2: ' + event)
+      // console.log ('SCHEMAS: ' + JSON.stringify(this.$store.state.metadata.schemasRef))
 
-      console.log ('new jsonData: ' + JSON.stringify(this.jsonData))
-      this.$root.$emit('template-returned', templateData)
+      // this.templatesData.template
+      const schemaDir = this.$store.state.metadata.schemasDir + "\\"
+      const schemaFile = event + '.json'
+      const realTemplate = buildsTemplate(schemaDir, schemaFile)
+      console.log ('templateof: ' + event + ' is: ' + JSON.stringify(realTemplate))
+      const realTemplateData = {
+        name: event,
+        data: this.buildTemplate(realTemplate)
+      }
+      console.log ('buildTemplate:realTemplateData: ' + JSON.stringify(realTemplateData))
+
+      const newTemplateData = {
+        name: event,
+        data: realTemplateData
+          // [
+          //   { name: 'wut', type: 'number', childParams: null, remark: 3 },
+          //   { name: 'quantity', type: 'string', childParams: null, remark: 'remarkable' },
+          //   // { quantity: 0 },
+          //   // { specifications: 'here a spec - longer?' }
+          // ]
+      }
+      const oldTemplateData = {
+        name: event,
+        data: // realTemplate
+          [
+            { name: 'wut', type: 'number', childParams: null, remark: 3 },
+            { name: 'quantity', type: 'string', childParams: null, remark: 'remarkable' },
+            // { quantity: 0 },
+            // { specifications: 'here a spec - longer?' }
+          ]
+      }
+      console.log('oldTemplateData: ' + JSON.stringify(oldTemplateData))
+      console.log('newTemplateData: ' + JSON.stringify(newTemplateData))
+
+      // console.log ('new jsonData: ' + JSON.stringify(this.jsonData))
+      this.$root.$emit('template-returned', newTemplateData)
     },
 
       // Listen to child emitted event to update the state based on new input
