@@ -22,14 +22,28 @@ export default {
   },
   computed: {
     saved() {
-      return this.$store.state.docs.currentDoc.saved;
+      return this.$store.state.docs.currentDoc.saved
+    },
+    guidesIsActive(){
+      return this.$store.getters.guidesIsActive
     }
   },
   methods: {
     saveDocFile() {
-      this.$store.dispatch('saveDocFile');
-      this.$store.commit('SET_TO_SAVED', this.$store.state.docs.currentDoc.id);
-    }
+      if(this.guidesIsActive){
+        if(process.env.NODE_ENV === 'production') 
+          alert('Save is disabled for GUIDES documents')
+        else {
+            this.$store.dispatch('saveDocFile')
+            this.$store.commit('SET_TO_SAVED', this.$store.state.docs.currentDoc.id)
+          }  
+      }
+      else {
+        this.$store.dispatch('saveDocFile')
+        this.$store.commit('SET_TO_SAVED', this.$store.state.docs.currentDoc.id)
+      }
+
+    }    
   }
-};
+}
 </script>

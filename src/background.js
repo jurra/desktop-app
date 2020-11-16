@@ -7,8 +7,8 @@ import installExtension, {
   VUEJS_DEVTOOLS,
   APOLLO_DEVELOPER_TOOLS
 } from 'electron-devtools-installer';
+import  path  from 'path'
 
-global.vuexState = null
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 let win;
@@ -92,10 +92,10 @@ function createWindow() {
   });
 
   win.on('closed', () => {
-    // Send a message to get the state
-    // If ready to close, close, else cancel..
     win = null;
   });
+
+  return win
 }
 
 // Quit when all windows are closed.
@@ -119,8 +119,10 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  let guidesPath = ''
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
+    guidesPath = path.join(app.getAppPath(), '/win-unpacked/guides')
     try {
       await installExtension(VUEJS_DEVTOOLS);
       await installExtension(APOLLO_DEVELOPER_TOOLS);
@@ -128,7 +130,16 @@ app.on('ready', async () => {
       console.error('Devtools failed to install:', e.toString());
     }
   }
-  createWindow();
+  else {
+    guidesPath = path.join(app.getAppPath(), '../../guides')
+  }
+  
+  const win = createWindow()
+
+  console.log(guidesPath)
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.send('passAppPath', guidesPath)
+  })
 });
 
 // Exit cleanly on request from parent process in development mode.
@@ -145,5 +156,3 @@ if (isDevelopment) {
     });
   }
 }
-
-
