@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="hardocsApp">
     <div>
       <MenuBar class="fixed bg-white z-40 w-full"></MenuBar>
     </div>
@@ -15,7 +15,7 @@
       </div>
       <div
         :class="{ active: metadata }"
-        class="fixed pt-10 top-0 right-0 h-screen flex "
+        class="fixed pt-10 top-0 right-0 h-screen flex hidden"
       >
         <div class="flex items-center transform -rotate-90 w-4">
           <div class="bg-primary-100 text-white">
@@ -59,11 +59,16 @@ export default {
     toggleOpen() {
       this.metadata = !this.metadata;
     }
+  },
+  created(){
+    console.log("WELCOME TO HARDOCS")
   }
 };
 </script>
 <style scoped>
-
+.hardocsApp{
+  overflow: hidden; /* Hide scrollbars */
+}
 .active {
   @apply w-1/3;
 }

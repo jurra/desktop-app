@@ -2,11 +2,12 @@
   "name": "hardocs-vue-apollo-client",
   "version": "0.1.0",
   "private": true,
+  "description": "A desktop app to generate project documentations",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "rimraf ./dist_electron && vue-cli-service electron:build",
+    "electron:build": "vue-cli-service electron:build",
     "build:linux": "yarn electron:build --linux deb",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
@@ -38,6 +39,7 @@
     "vue": "^2.6.12",
     "vue-codemirror": "^4.0.6",
     "vue-feather-icons": "^5.1.0",
+    "vue-json-edit": "^1.4.3",
     "vue-router": "^3.2.0",
     "vue-shortkey": "^3.1.7",
     "vuex": "^3.4.0"

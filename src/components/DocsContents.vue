@@ -1,8 +1,14 @@
 <template>
   <div>
-    <h1>
-      <router-link to="/">Docs</router-link>
+    <h1 v-if="guidesIsActive">
+      <a style="cursor:pointer;" @click="backToProject()">Back to project </a>
     </h1>
+    <div v-else>
+      <h1 v-if="cwd == appPath">
+        <a>Guides</a>
+      </h1>
+      <h1 v-else  style="cursor:pointer;" @click="showGuides()">Guides</h1>
+    </div>
     <ul>
       <li>
         <button
@@ -50,16 +56,18 @@ export default {
     return {
       showModal: false,
       docToDelete: null,
-      // isActive: ,
-      // currentDocId: getCurrentDocId()
+      guidesIsActive: false,
+      projectPath: '',
+      currentDoc:''
     };
   },
 
   computed: {
     ...mapGetters({
-        docId: 'currentDocId'
+        docId: 'currentDocId',
+        isAppPath: 'guidesIsActive'
     }),
-  
+    
     currentDocId:{
       get(){
         return this.docId
@@ -73,20 +81,49 @@ export default {
     },
     entryFile() {
       return this.$store.state.docs.entryFile;
+    },
+    cwd:{
+      get(){ return this.$store.state.docs.cwd  }
+    },
+    appPath:{
+      get(){ return this.$store.state.docs.appPath }
     }
   },
+  // created(){
+  //   this.toggleGuidesProject()
+  // },
   methods: {
     createPath(id) {
       return `/doc/${id}`;
     },
 
+    async showGuides() {
+      this.guidesIsActive = true
+      this.$store.commit('SET_GUIDES', true)
+      this.projectPath = this.cwd
+      this.currentDoc = this.currentDocId
+      await this.$store.commit('SET_CWD', this.$store.state.docs.appPath)
+      this.$store.dispatch('loadProject')
+
+    },
+
+    async backToProject(){
+      this.guidesIsActive = false
+      this.$store.commit('SET_GUIDES', false)
+      await this.$store.commit('SET_CWD', this.projectPath)
+      await this.$store.dispatch('loadProject')
+      this.setCurrentDoc(this.currentDoc)
+    },
+
     async setCurrentDoc(id){
+      if(!this.guidesIsActive){ this.currentDoc = id }
       await this.$store.dispatch('setCurrentDoc',id)
     },
 
     addDoc() {
       this.$store.dispatch('addDoc');
     },
+
     removeDoc(id) {
       this.$store.dispatch('removeDoc', id);
     },
@@ -95,6 +132,13 @@ export default {
       if (confirm('are you sure you want to delete this document ?')) {
         this.$store.dispatch('removeDoc', id);
       }
+    }
+  },
+  watch:{
+    cwd(){
+      // Set guides is active to false when a new project is created
+      // Or when the cwd changed but not to guides, instead to a new project
+      if(this.cwd !== this.appPath ) this.guidesIsActive = false
     }
   }
 };
