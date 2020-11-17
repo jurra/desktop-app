@@ -110,46 +110,18 @@ export default {
       })
       return template
     },
-    templateSelected: function(event) {
-      // console.log('templateSelected2: ' + event)
-      // console.log ('SCHEMAS: ' + JSON.stringify(this.$store.state.metadata.schemasRef))
-
-      // this.templatesData.template
+    templateSelected: function(templateName) {
       const schemaDir = this.$store.state.metadata.schemasDir + "\\"
-      const schemaFile = event + '.json'
+      const schemaFile = templateName + '.json'
       const realTemplate = buildsTemplate(schemaDir, schemaFile)
-      console.log ('templateof: ' + event + ' is: ' + JSON.stringify(realTemplate))
-      const realTemplateData = {
-        name: event,
+      console.log ('templateof: ' + templateName + ' is: ' + JSON.stringify(realTemplate))
+      const templateData = {
+        name: templateName,
         data: this.buildTemplate(realTemplate)
       }
-      console.log ('buildTemplate:realTemplateData: ' + JSON.stringify(realTemplateData))
 
-      const newTemplateData = {
-        name: event,
-        data: realTemplateData
-          // [
-          //   { name: 'wut', type: 'number', childParams: null, remark: 3 },
-          //   { name: 'quantity', type: 'string', childParams: null, remark: 'remarkable' },
-          //   // { quantity: 0 },
-          //   // { specifications: 'here a spec - longer?' }
-          // ]
-      }
-      const oldTemplateData = {
-        name: event,
-        data: // realTemplate
-          [
-            { name: 'wut', type: 'number', childParams: null, remark: 3 },
-            { name: 'quantity', type: 'string', childParams: null, remark: 'remarkable' },
-            // { quantity: 0 },
-            // { specifications: 'here a spec - longer?' }
-          ]
-      }
-      console.log('oldTemplateData: ' + JSON.stringify(oldTemplateData))
-      console.log('newTemplateData: ' + JSON.stringify(newTemplateData))
-
-      // console.log ('new jsonData: ' + JSON.stringify(this.jsonData))
-      this.$root.$emit('template-returned', newTemplateData)
+      // console.log('templateData: ' + JSON.stringify(templateData))
+      this.$root.$emit('template-returned', templateData)
     },
 
       // Listen to child emitted event to update the state based on new input
