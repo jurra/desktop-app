@@ -87,6 +87,8 @@ module.exports = {
   plugins: [],
   purge: {
     // Learn more on https://tailwindcss.com/docs/controlling-file-size/#removing-unused-css
+    mode: 'layers', // avoids a warning from Tailwind, suggested by them, maybe because two-stage build
+    layers: ['utilities'], // also Tailwind says this needed but still warns
     enabled: process.env.NODE_ENV === 'production',
     content: [
       'src/components/**/*.vue',
