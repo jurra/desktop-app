@@ -31,7 +31,7 @@
 // import DocsServices from '@/services/index';
 // import SchemasDir from '@/components/MetadataEdit__SchemasDir';
 import { mapGetters, mapState } from 'vuex';
-import { buildsTemplate } from '@/../__utils__/schemas.js'
+import { buildsTemplate } from '@/./utils/schemas.js'
 
 export default {
   //   name:"JsonEditor",
@@ -111,6 +111,7 @@ export default {
       return template
     },
     templateSelected: function(templateName) {
+      console.log('templateSelected:templateName: ' + templateName)
       const schemaDir = this.$store.state.metadata.schemasDir + "\\"
       const schemaFile = templateName + '.json'
       const realTemplate = buildsTemplate(schemaDir, schemaFile)
@@ -120,7 +121,6 @@ export default {
         data: this.buildTemplate(realTemplate)
       }
 
-      // console.log('templateData: ' + JSON.stringify(templateData))
       this.$root.$emit('template-returned', templateData)
     },
 

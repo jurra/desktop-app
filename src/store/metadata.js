@@ -1,4 +1,4 @@
-import { mkSchemasList } from '../../__utils__/schemas'
+import { mkSchemasList } from '../utils/schemas'
 // FIXME: Setup unit testing with electron
 import { habitatLocal } from '@hardocs-project/habitat-client';
 import fs from 'fs'
@@ -99,10 +99,10 @@ async function createNewHardocsJson(generalMetadata, dataSetObject) {
             docsDir: generalMetadata.docsFolder,
             dataSet: dataSetObject
         }
-    
+
         newMetadataFile = await JSON.stringify(newMetadataFile, null, 2)
         // console.log("New metadata to store in json: " + newMetadataFile)
-    
+
         fs.writeFileSync(`${generalMetadata.cwd}/.hardocs/hardocs.json`, newMetadataFile, function (err) {
             if (err) return console.log(err)
             console.log(newMetadataFile)
@@ -111,5 +111,5 @@ async function createNewHardocsJson(generalMetadata, dataSetObject) {
     else {
         console.log("Cant generate hardocsJson from invalid hardocs project")
     }
-    
+
 }

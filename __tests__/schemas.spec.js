@@ -8,7 +8,7 @@ import { state, getters, actions, mutations } from '../src/store/metadata'
 import {
     buildsTemplate,
     mkSchemasList
-} from '../__utils__/schemas'
+} from '../src/utils/schemas'
 
 const absoluteSchemaDir = "D:\\my-projects\\hardocs\\REPOS\\hardocs-vue-client\\__tests__\\__fixtures__\\"
 const schemaDir = './__tests__/__fixtures__/'
@@ -31,7 +31,7 @@ describe("Json schemas loader and templates based on schemas", () => {
         it("Generates lists available schemas in a path", async () => {
             let schemasList = await mkSchemasList(absoluteSchemaDir)
             // await console.log("Loading schemasdir " + JSON.stringify(mkSchemasList(absoluteSchemaDir, selectedSchemaFile)))
-            
+
             expect(schemasList.refSchemas).toEqual(schemasRef)
             // expect(schemasList.folderPath).toEqual(undefined) // FIXME: this should be passed from the state
         })
