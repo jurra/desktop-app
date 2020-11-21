@@ -23,7 +23,7 @@
     "@ckeditor/ckeditor5-vue": "^1.0.3",
     "@formschema/native": "^2.0.0-alpha.2",
     "@hardocs-project/habitat-client": "^0.5.17",
-    "@hardocs-project/vue-json-edit": "^0.9.0",
+    "@hardocs-project/vue-json-edit": "^0.9.1",
     "add": "^2.0.6",
     "ajv": "^6.12.6",
     "ckeditor5": "https://github.com/Hardocs/editor.git",
