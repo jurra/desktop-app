@@ -6,8 +6,8 @@ import path from 'path'
  * Builds a template object that includes fields, examples and references to
  *  other schemas
  * Reference to other schemas are used to compose complex schemas
- * @param { String } schemaDir a path where the schemas a re located 
- * @param { String } schemaFileName the schemaFile name 
+ * @param { String } schemaDir a path where the schemas a re located
+ * @param { String } schemaFileName the schemaFile name
  */
 export function buildsTemplate(schemaDir, schemaFileName) {
     // Find the location of the schema in the file system
@@ -17,7 +17,7 @@ export function buildsTemplate(schemaDir, schemaFileName) {
     // Create response object
     const object = {
         referenceSchemas: [], // an array of objects
-        fields: schema.properties, 
+        fields: schema.properties,
         examples: []
     }
 
@@ -54,7 +54,7 @@ export function buildsTemplate(schemaDir, schemaFileName) {
 /**
  * Creates a list of objects that defines the title of the schema
  * and the name as of the file that contains the schema as a reference
- * @param {String} folderPath 
+ * @param {String} folderPath
  */
 export function mkSchemasList(folderPath) {
     return new Promise((resolve, reject) => {
@@ -74,7 +74,7 @@ export function mkSchemasList(folderPath) {
             })
             resolve({
                 folderPath: folderPath,
-                refSchemas: refSchemas 
+                refSchemas: refSchemas
             })
         } catch (e) {
             console.log(JSON.stringify({ loadSchemas: 'error: ' + e.toString() }))

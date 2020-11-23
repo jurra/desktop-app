@@ -17,6 +17,7 @@
           }"
           :objData="data"
           :v-model="data"
+          :templatesData="templatesData"
           v-on:input="passDataFromEditor"
         ></JsonEditor>
       </div>
@@ -30,10 +31,14 @@
 // import DocsServices from '@/services/index';
 // import SchemasDir from '@/components/MetadataEdit__SchemasDir';
 import { mapGetters, mapState } from 'vuex';
+import { buildsTemplate } from '@/../__utils__/schemas.js'
 
 export default {
   //   name:"JsonEditor",
   components: {},
+  created () {
+    this.$root.$on('template-selected', (event) => { this.templateSelected(event) })
+  },
   data: function() {
     return {
       path: '',
@@ -61,12 +66,65 @@ export default {
         return this.$store.commit('UPDATE_DATA_SET', newJsonData);
       }
     },
-    schemas() {
+    schemas: function () {
       return this.$store.state.metadata.schemasRef;
+    },
+    selections: function () {
+      return this.schemas.map (key => key.title)
+    },
+    templatesData: function () {
+      return {
+        selections: this.selections,
+        template: null, // *todo* likely not needed now
+        store: this.$store  // *todo* likely not needed now
+      }
     }
   },
   methods: {
-    // Listen to child emitted event to update the state based on new input
+    buildTemplate: function (schemaData) {
+      console.log('buildTemplate: ' + JSON.stringify(schemaData))
+      const template = Object.keys(schemaData.fields).map (key => {
+        let value = schemaData.fields[key]
+        if (!value) {
+          switch (typeof value) {
+            case 'string':
+              value = key
+              break
+            case 'number':
+              value = 0
+              break
+            case 'boolean':
+              value = false
+              break
+            default:
+              break
+          }
+        }
+        // console.log('buildTemplate:key: ' + key + ': ' + value)
+        return {
+          name: key,
+          type: typeof value,
+          childParams: null,
+          remark: value
+        }
+      })
+      return template
+    },
+    templateSelected: function(templateName) {
+      const schemaDir = this.$store.state.metadata.schemasDir + "\\"
+      const schemaFile = templateName + '.json'
+      const realTemplate = buildsTemplate(schemaDir, schemaFile)
+      console.log ('templateof: ' + templateName + ' is: ' + JSON.stringify(realTemplate))
+      const templateData = {
+        name: templateName,
+        data: this.buildTemplate(realTemplate)
+      }
+
+      // console.log('templateData: ' + JSON.stringify(templateData))
+      this.$root.$emit('template-returned', templateData)
+    },
+
+      // Listen to child emitted event to update the state based on new input
     async passDataFromEditor(input) {
       return this.$store.dispatch('updateDataset', input)
     }
