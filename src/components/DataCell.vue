@@ -73,7 +73,7 @@ import TemplateSelector from '@/components/MetadataEdit__TemplateSelector'
 
 import {
     buildsTemplate,
-} from '../../__utils__/schemas'
+} from '@/utils/schemas'
 import YAML from 'json-to-pretty-yaml'
 
 // more codemirror resources

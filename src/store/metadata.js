@@ -1,4 +1,4 @@
-import { mkSchemasList } from '../../__utils__/schemas'
+import { mkSchemasList } from '../utils/schemas'
 // FIXME: Setup unit testing with electron
 import { habitatLocal } from '@hardocs-project/habitat-client';
 import fs from 'fs'

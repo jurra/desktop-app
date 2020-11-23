@@ -31,7 +31,7 @@
 // import DocsServices from '@/services/index';
 // import SchemasDir from '@/components/MetadataEdit__SchemasDir';
 import { mapGetters, mapState } from 'vuex';
-import { buildsTemplate } from '@/../__utils__/schemas.js'
+import { buildsTemplate } from '@/utils/schemas.js'
 
 export default {
   //   name:"JsonEditor",

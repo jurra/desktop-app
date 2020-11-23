@@ -8,7 +8,7 @@ import { state, getters, actions, mutations } from '../src/store/metadata'
 import {
     buildsTemplate,
     mkSchemasList
-} from '../__utils__/schemas'
+} from '/src/utils/schemas'
 
 const absoluteSchemaDir = "D:\\my-projects\\hardocs\\REPOS\\hardocs-vue-client\\__tests__\\__fixtures__\\"
 const schemaDir = './__tests__/__fixtures__/'
@@ -26,7 +26,7 @@ const schemasRef = [
  * that has all the reference to child schemas to generate metadata
  * additional semi-structured that can be added to the schemas
  */
-describe("Json schemas loader and templates based on schemas", () => {
+describe.only("Json schemas loader and templates based on schemas", () => {
     describe("The utility library layer", () => {
         it("Generates lists available schemas in a path", async () => {
             let schemasList = await mkSchemasList(absoluteSchemaDir)
