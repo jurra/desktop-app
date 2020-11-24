@@ -16,7 +16,7 @@ const store = new Vuex.Store({
   }
 })
 
-it("Stores the metadata object inside hardocs.json", () => {
+it.only("Stores the metadata object inside hardocs.json", () => {
   // Store the object here.....
   store.dispatch('writeMetadata', )
   expect(1).toBe(0)

@@ -59,8 +59,9 @@ export function buildsTemplate(schemaDir, schemaFileName) {
 export function mkSchemasList(folderPath) {
     return new Promise((resolve, reject) => {
         // servicesLog('loadFilePathsFromFolder: ' + JSON.stringify(folderPath))
+        console.log(folderPath)
         try {
-            let files = fs.readdirSync(folderPath)
+            let files = fs.readdirSync(folderPath) //FIXME: Exception, a directory lives inside this path...
             let refSchemas = []
             // FIXME: make it a reduce function
             files.forEach((file) => {

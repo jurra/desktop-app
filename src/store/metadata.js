@@ -43,7 +43,7 @@ export const actions = {
      * within a folder, and then take it from there
      */
     async setSchemasDir({ commit, dispatch }) {
-        const dir = await habitatLocal.chooseFolderForUse()
+        const dir = await habitatLocal.chooseFolderForUse() //BUGFIX: Shouldnt this consume a path string???
         await commit('SET_SCHEMAS_DIR', dir)
         const schemasRefs = await mkSchemasList(dir)
         dispatch('addSchemas', schemasRefs)
