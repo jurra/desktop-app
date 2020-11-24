@@ -3,7 +3,7 @@ module.exports = {
     collectCoverage: true,
     collectCoverageFrom: [
         "**/src/*.{js,jsx}",
-        "__utils__/*.{js,jsx}",
+        "utils/*.{js,jsx}",
         "!**/node_modules/**",
         "!**/vendor/**",
         "!**/mocks/**"

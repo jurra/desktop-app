@@ -70,6 +70,7 @@ export default {
   overflow: hidden; /* Hide scrollbars */
 }
 .active {
-  @apply w-1/3;
+/* *todo* really this should be draggable, full templs will show, but bigger an improvement */
+  @apply w-1/2;
 }
 </style>

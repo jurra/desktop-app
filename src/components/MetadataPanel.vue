@@ -57,12 +57,9 @@ export default {
     }),
     data: {
       get: function() {
-        console.log("getting this data set " + JSON.stringify(this.dataSet, null, 2))
-        // JSON.stringify("MetadataPanel gets" + this.dataSet); // BUG: For some reason this impacts reactiveness
         return this.dataSet;
       },
       set: function(newJsonData) {
-        console.log("Setting : " + JSON.stringify(newJsonData, null, 2))
         return this.$store.commit('UPDATE_DATA_SET', newJsonData);
       }
     },
@@ -111,6 +108,7 @@ export default {
       return template
     },
     templateSelected: function(templateName) {
+      console.log('templateSelected:templateName: ' + templateName)
       const schemaDir = this.$store.state.metadata.schemasDir + "\\"
       const schemaFile = templateName + '.json'
       const realTemplate = buildsTemplate(schemaDir, schemaFile)
@@ -120,7 +118,6 @@ export default {
         data: this.buildTemplate(realTemplate)
       }
 
-      // console.log('templateData: ' + JSON.stringify(templateData))
       this.$root.$emit('template-returned', templateData)
     },
 

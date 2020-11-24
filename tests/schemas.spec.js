@@ -31,7 +31,7 @@ describe("Json schemas loader and templates based on schemas", () => {
         it.only("Generates lists available schemas in a path", async () => {
             let schemasList = await mkSchemasList(absoluteSchemaDir)
             // await console.log("Loading schemasdir " + JSON.stringify(mkSchemasList(absoluteSchemaDir, selectedSchemaFile)))
-            
+
             expect(schemasList.refSchemas).toEqual(schemasRef)
             // expect(schemasList.folderPath).toEqual(undefined) // FIXME: this should be passed from the state
         })
