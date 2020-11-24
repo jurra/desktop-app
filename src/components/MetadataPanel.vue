@@ -59,8 +59,8 @@ export default {
       get: function() {
         return this.dataSet;
       },
-      set: function(newJsonData) {
-        return this.$store.commit('UPDATE_DATA_SET', newJsonData);
+      set: function(newDataSet) {
+        return this.$store.commit('UPDATE_DATA_SET', newDataSet);
       }
     },
     schemas: function () {
@@ -121,7 +121,7 @@ export default {
       this.$root.$emit('template-returned', templateData)
     },
 
-      // Listen to child emitted event to update the state based on new input
+    // Listen to child emitted event to update the state based on new input
     async passDataFromEditor(input) {
       return this.$store.dispatch('updateDataset', input)
     }
