@@ -979,10 +979,10 @@
   resolved "https://registry.yarnpkg.com/@hardocs-project/habitat-client/-/habitat-client-0.5.17.tgz#1f80b598379d0624ab384237877f5a7081ffab67"
   integrity sha512-3Fs5MkDyeg/MwLtBu3YFPYDGslZJyfEfgnJzdBhi80og+kqZ57wI0NkGSViyFQNhutHAC8k/99bTRAxRy1L3bg==
 
-"@hardocs-project/vue-json-edit@^0.9.2":
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/@hardocs-project/vue-json-edit/-/vue-json-edit-0.9.2.tgz#5a0d6e2a1182ac6ce71c9d1cf5936134238a270c"
-  integrity sha512-mxBJD5N0JbcptXu6WXnec+wd9xNiyR0CfOtDr0IIYWczYdc6hkzjtJTqHOfuzX5srCbuBWATBoKRa8w5IuQw1w==
+"@hardocs-project/vue-json-edit@0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@hardocs-project/vue-json-edit/-/vue-json-edit-0.9.4.tgz#07111bd175ef25427f9e8e86c8e62fa7624842ff"
+  integrity sha512-u6uFRg/nKPBqScY4A2PJdYs88Kvp3/A+xZEqlLt6NkpIUWbYeqKeSR8uCUoaLuoWYGv+MFIrpKWpD+nDwK9mXw==
   dependencies:
     highlight.js "^9.15.6"
     lodash.clonedeep "^4.5.0"
