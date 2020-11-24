@@ -2,6 +2,7 @@ import { mkSchemasList } from '../utils/schemas'
 // FIXME: Setup unit testing with electron
 import { habitatLocal } from '@hardocs-project/habitat-client';
 import fs from 'fs'
+import { parsedComplexSchemaExample } from '../../tests/outputExamples'
 // import Ajv from 'ajv';
 // let docs = context.rootState.instance.docs
 
@@ -12,7 +13,7 @@ export const state = {
     schemasDir: "",                   // here goes a path
     schemasRef: [],
     hardocsJson: {},
-    dataSet:{}
+    dataSet:parsedComplexSchemaExample
 }
 
 

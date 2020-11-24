@@ -9,16 +9,16 @@ import {
     buildsTemplate,
     mkSchemasList
 } from '../src/utils/schemas'
+import { parsedComplexSchemaExample } from './outputExamples.js'
 
 const absoluteSchemaDir = "D:\\my-projects\\hardocs\\REPOS\\hardocs-vue-client\\tests\\fixtures\\sample-schemas\\"
-const schemaDir = './tests/fixtures/'
+const schemaDir = './tests/fixtures/sample-schemas/'
 const selectedSchemaFile = 'project.schema.json'
 const schemasRef = [
     { title: 'The root schema', ref: 'person.json' },
     { title: 'Project', ref: 'project.schema.json' },
     { title: 'Vendor', ref: 'vendor.schema.json' }
 ]
-
 /**
  * A json schemas loader, template generator and editor in vue that
  * allows user to generate metadata easily and consistently with schemas specs
@@ -28,7 +28,11 @@ const schemasRef = [
  */
 describe("Json schemas loader and templates based on schemas", () => {
     describe("The utility library layer", () => {
-        it.only("Generates lists available schemas in a path", async () => {
+        it.only("Parse correctly json file",() => {
+            console.log(parsedComplexSchemaExample)
+        })
+
+        it("Generates lists available schemas in a path", async () => {
             let schemasList = await mkSchemasList(absoluteSchemaDir)
             // await console.log("Loading schemasdir " + JSON.stringify(mkSchemasList(absoluteSchemaDir, selectedSchemaFile)))
 
@@ -36,7 +40,7 @@ describe("Json schemas loader and templates based on schemas", () => {
             // expect(schemasList.folderPath).toEqual(undefined) // FIXME: this should be passed from the state
         })
 
-        it("converts json schema into a json object", () => {
+        it.only("converts json schema into a template that is a json object", () => {
             let json = buildsTemplate(schemaDir, selectedSchemaFile)
             json = json.fields
             let mockObject = JSON.stringify({
@@ -54,6 +58,7 @@ describe("Json schemas loader and templates based on schemas", () => {
             mockObject = JSON.parse(mockObject)
             let jsonKeys = Object.keys(json).sort()
             let mockObjectKeys = Object.keys(mockObject).sort()
+            console.log(jsonKeys)
             expect(jsonKeys).toStrictEqual(mockObjectKeys)
         })
     })
@@ -75,7 +80,7 @@ describe("Json schemas loader and templates based on schemas", () => {
 
 
         it("stores the list of schemas in the state given a folder path", async () => {
-            store.commit('SET_SCHEMAS_DIR', schemaDir )
+            store.commit('SET_SCHEMAS_DIR', schemaDir)
             let list = await mkSchemasList(store.state.metadata.schemaDir)
             store.dispatch('addSchemas', list)
             expect(store.state.metadata.schemasRef).toStrictEqual(schemasRef)
