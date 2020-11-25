@@ -13,6 +13,7 @@ import { promisify } from 'util'
 export const state = {
     standardCwd:"",
     isSaved: true,
+    savedVersion:{},
     metadataPath:"",
     metadataFilename:"", // This comes from create a project
     schemasDir: "",      // here goes a path
@@ -153,10 +154,12 @@ export const actions = {
         commit('UPDATE_DATA_SET', newMetadata)
     },
 
-    async saveMetadata({state, commit}, metadataFile){
-        // On click fire up this action
-        commit('SET_SAVED_METADATA', true)
-        writeMetadataFile(metadataFile, state.metadata )
+    async saveMetadata({state, commit}){
+        commit('SET_SAVED_METADATA', true) // This will not be used during this first prototype
+        const fileContent = JSON.stringify(state.metadata, null, 2)
+        
+        // FIXME: this is now hardcoded but it should be configurable 
+        writeMetadataFile(`${this.state.docs.cwd}/.hardocs/metadata.json`, fileContent )
     }
     
 }

@@ -8,7 +8,10 @@
       class="content-center w-full m-auto items-center flex-col"
     >
       <div class="">
-        <p class="pl-4"><strong>Project folder :  </strong>{{docs.cwd}}</p>
+        <!-- <p class="pl-4"><strong>Project folder :  </strong>{{docs.cwd}}</p> -->
+        <div class="flex">
+        <SaveFile class="px-4 pb-4"></SaveFile>
+        </div>
 
         <JsonEditor
           :options="{
@@ -20,6 +23,7 @@
           :templatesData="templatesData"
           v-on:input="passDataFromEditor"
         ></JsonEditor>
+
       </div>
     </div>
   </div>
@@ -32,10 +36,13 @@
 // import SchemasDir from '@/components/MetadataEdit__SchemasDir';
 import { mapGetters, mapState } from 'vuex';
 import { buildsTemplate } from '@/utils/schemas.js'
+import SaveFile from '@/components/MetadataEdit__SaveFile.vue'
 
 export default {
   //   name:"JsonEditor",
-  components: {},
+  components: {
+    SaveFile
+  },
   created () {
     this.$root.$on('template-selected', (event) => { this.templateSelected(event) })
   },
