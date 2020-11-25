@@ -1,25 +1,50 @@
 import { mkSchemasList } from '../utils/schemas'
 // FIXME: Setup unit testing with electron
-import { habitatLocal } from '@hardocs-project/habitat-client';
+import { 
+    habitatLocal,
+    selectContentFromFolder 
+} from '@hardocs-project/habitat-client'
 import fs from 'fs'
-import { parsedComplexSchemaExample } from '../../tests/outputExamples'
+import { metadataExample } from '../../tests/fixtures/outputExamples'
+import { promisify } from 'util' 
 // import Ajv from 'ajv';
 // let docs = context.rootState.instance.docs
 
 
 export const state = {
-    // TODO: transfer appDir later to the index store
-    appDir: "D:\\my-projects\\hardocs\\REPOS\\hardocs-vue-client",                        // stores the path where the application lives
-    schemasDir: "",                   // here goes a path
+    standardCwd:"",
+    isSaved: true,
+    metadataPath:"",
+    metadataFilename:"", // This comes from create a project
+    schemasDir: "",      // here goes a path
     schemasRef: [],
-    hardocsJson: {},
-    dataSet:parsedComplexSchemaExample
+    hardocsJson: {},     // this is wrong
+    metadata:metadataExample,
+    
+    /**
+     * CONSIDERATION: What happens when the baseStandard changes,
+     * Ideally the user could change the base standard, the user should be notified, with the notion 
+     * that standard might need to change, alternatively we could cache a log of metadata files and 
+     * the correspondent standard...
+     */
+    baseStandard:{}      // This is where the current baseStandard is defined
 }
 
-
 export const mutations = {
+    SET_STANDARD_DIR(state, dir){
+        state.standardCwd = dir
+    },
+
+    SET_BASE_STANDARD(state, jsonSchema){
+        state.baseStandard = jsonSchema
+    },
+
+    SET_SAVED_METADATA(state, isSaved){
+        state.isSaved = isSaved
+    },
+
     ADD_OBJECT(state, payload) {
-        state.dataSet.push(payload)
+        state.metadata.push(payload)
     },
     ADD_ROOT_SCHEMAS(state, schemasList) {
         state.schemasRef = schemasList
@@ -28,23 +53,48 @@ export const mutations = {
         state.schemasDir = path
     },
 
-    UPDATE_DATA_SET(state, dataSetObject) {
-        state.dataSet = dataSetObject
+    UPDATE_DATA_SET(state, metadataObject) {
+        state.metadata = metadataObject
     },
 
     SET_HARDOCS_JSON(state, object) {
         state.hardocsJson = object
-    }
+    },
+    
 }
 
 export const actions = {
+    /**
+     * The user might have a standard in a folder, or in the internet.
+     * The regular approach is that the standard lives in the internet.
+     * In this case the jsonSchema standard should be taken from a url.
+     * We need to verify that is a jsonSchema.
+     * This action involves setting the dir, but also storing the base standard in 
+     * the store.
+     */
+    async setStandard({commit}, dirPath){
+        // TODO: check that the object has a set of properties...
+        // TODO: Otherwise throw an error, is not a valid json schema
+        
+        const dir = await habitatLocal.chooseFolderForUse() 
+        commit('SET_STANDARD_DIR', dir)
+        // Get the filename...
+        // Open a file 
+        const baseStandard = readFile()
+    
+    },
+
+    // selectStandardFile(){
+
+    // },
+
     /**
      * We add a schema dir to provide the contexts of schemas relevant for this
      * hardocs projects, we could for instance compile a collection of standards
      * within a folder, and then take it from there
      */
     async setSchemasDir({ commit, dispatch }) {
-        const dir = await habitatLocal.chooseFolderForUse() //BUGFIX: Shouldnt this consume a path string???
+        const dir = habitatLocal.chooseFolderForUse() //BUGFIX: Shouldnt this consume a path string???
         await commit('SET_SCHEMAS_DIR', dir)
         const schemasRefs = await mkSchemasList(dir)
         dispatch('addSchemas', schemasRefs)
@@ -67,38 +117,71 @@ export const actions = {
         commit('ADD_OBJECT', dataObject)
     },
 
-    async updateDataset({ commit }, dataSet) {
-        await commit('UPDATE_DATA_SET', dataSet)
-        createNewHardocsJson(this.state.docs, dataSet)
+    async updateMetadata({ commit }, metadata) {
+        await commit('UPDATE_DATA_SET', metadata)
+        
+        // TODO: This should change to writeFile function 
+        createNewHardocsJson(this.state.docs, metadata)
     },
 
     /**
-     * When project is opened, then load the new dataset from hardocs.json
+     * When project is opened, then load the new metadata from hardocs.json
      */
-    async loadsDataset({commit}){
-        let newDataset = await JSON.parse(fs.readFileSync(`${this.state.docs.cwd}/.hardocs/hardocs.json`, 'utf8'))
-        if(!newDataset.dataSet){
-           newDataset['dataSet'] = {}
+    async loadsMetadata({commit}){
+        let newMetadata = await JSON.parse(fs.readFileSync(`${this.state.docs.cwd}/.hardocs/hardocs.json`, 'utf8'))
+        if(!newMetadata.metadata){
+           newMetadata['metadata'] = {}
         }
-        else newDataset = newDataset.dataSet
-        commit('UPDATE_DATA_SET', newDataset)
+        else newMetadata = newMetadata.metadata
+        commit('UPDATE_DATA_SET', newMetadata)
+    },
+
+    async saveMetadata({state, commit},{ metadataPath, metadataFile }){
+        // On click fire up this action
+        commit('SET_SAVED_METADATA', true)
+        writeMetadataFile(metadataFile, state.metadata )
     }
+    
 }
 
 export const getters = {
     stateData: state => {
-        return state
+        return state //FIXME: This is wrong
     }
 }
 
-async function createNewHardocsJson(generalMetadata, dataSetObject) {
+
+
+/** HELPER FUNCTIONS FOR METADATA STATE STORE */
+/**
+ * Why this helper functions? and why they live here?
+ * 
+ * These helper functions cannot be actions, because actions are very strict,
+ * they require always two parameters, and the first one always need to be
+ * a parameter like {commit} or { dispatch}, otherwise it wont work
+ * Also in order to pass several parameters in the second parameter of the action
+ * it needs to be passed as an object
+ */
+
+
+/** TODO: This might live in utils Promisified file system operations */
+const readFile = promisify(fs.readFile)
+
+ 
+export async function writeMetadataFile(metadataFile, metadata){
+    const writeFile = promisify(fs.writeFile)
+    writeFile(metadataFile, metadata)
+}
+
+
+async function createNewHardocsJson(generalMetadata, metadataObject) {
     // FIXME: We should do json schema validation here
     if(Object.prototype.hasOwnProperty.call(generalMetadata, 'docsDir')){
         let newMetadataFile = {
             path: generalMetadata.cwd,
             entryFile: generalMetadata.entryFile,
             docsDir: generalMetadata.docsFolder,
-            dataSet: dataSetObject
+            metadata: metadataObject
         }
 
         newMetadataFile = await JSON.stringify(newMetadataFile, null, 2)
