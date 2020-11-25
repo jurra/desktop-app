@@ -1,3 +1,4 @@
+import path from 'path'
 import { mkSchemasList } from '../utils/schemas'
 // FIXME: Setup unit testing with electron
 import { 
@@ -67,18 +68,15 @@ export const mutations = {
 }
 
 export const actions = {
-    async selectStandard(){
+    async selectStandard({commit}){
         // TODO: check that the object has a set of properties...
         // TODO: Otherwise throw an error, is not a valid json schema
         console.log("Selecting standard")
-        // const dir = await habitatLocal.chooseFolderForUse() 
-        // commit('SET_STANDARD_DIR', dir)
-        // Get the filename...
-        // Open a file 
-        // dialog.showOpenDialog({ properties: ['openFile'] })
         const baseStandard = await habitatLocal.selectContentFromFolder(['json'])
-        console.log(baseStandard)
-        // const baseStandard = readFile()
+        let baseStandardPath = baseStandard.filePath
+        baseStandardPath = path.dirname(baseStandardPath)
+        commit('SET_STANDARD_DIR', baseStandardPath)
+        commit('SET_BASE_STANDARD', JSON.parse(baseStandard.content))
     },
 
     /**
