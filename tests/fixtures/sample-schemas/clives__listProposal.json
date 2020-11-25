@@ -1,0 +1,202 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "contributors": {
+                "contributor1": {
+                    "first__name": "Clive",
+                    "last__name": "Norway"
+                }
+            },
+            "components": {
+                "component1": {
+                    "name": "Motor",
+                    "reference": "Tesla"
+                },
+                "component2": {
+                    "name": "Engine",
+                    "reference": "GM"
+                }
+            }
+        }
+    ],
+    "required": [
+        "contributors",
+        "components"
+    ],
+    "properties": {
+        "contributors": {
+            "$id": "#/properties/contributors",
+            "type": "object",
+            "title": "The contributors schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "contributor1": {
+                        "first__name": "Clive",
+                        "last__name": "Norway"
+                    }
+                }
+            ],
+            "required": [
+                "contributor1"
+            ],
+            "properties": {
+                "contributor1": {
+                    "$id": "#/properties/contributors/properties/contributor1",
+                    "type": "object",
+                    "title": "The contributor1 schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": {},
+                    "examples": [
+                        {
+                            "first__name": "Clive",
+                            "last__name": "Norway"
+                        }
+                    ],
+                    "required": [
+                        "first__name",
+                        "last__name"
+                    ],
+                    "properties": {
+                        "first__name": {
+                            "$id": "#/properties/contributors/properties/contributor1/properties/first__name",
+                            "type": "string",
+                            "title": "The first__name schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                "Clive"
+                            ]
+                        },
+                        "last__name": {
+                            "$id": "#/properties/contributors/properties/contributor1/properties/last__name",
+                            "type": "string",
+                            "title": "The last__name schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                "Norway"
+                            ]
+                        }
+                    },
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true
+        },
+        "components": {
+            "$id": "#/properties/components",
+            "type": "object",
+            "title": "The components schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "component1": {
+                        "name": "Motor",
+                        "reference": "Tesla"
+                    },
+                    "component2": {
+                        "name": "Engine",
+                        "reference": "GM"
+                    }
+                }
+            ],
+            "required": [
+                "component1",
+                "component2"
+            ],
+            "properties": {
+                "component1": {
+                    "$id": "#/properties/components/properties/component1",
+                    "type": "object",
+                    "title": "The component1 schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": {},
+                    "examples": [
+                        {
+                            "name": "Motor",
+                            "reference": "Tesla"
+                        }
+                    ],
+                    "required": [
+                        "name",
+                        "reference"
+                    ],
+                    "properties": {
+                        "name": {
+                            "$id": "#/properties/components/properties/component1/properties/name",
+                            "type": "string",
+                            "title": "The name schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                "Motor"
+                            ]
+                        },
+                        "reference": {
+                            "$id": "#/properties/components/properties/component1/properties/reference",
+                            "type": "string",
+                            "title": "The reference schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                "Tesla"
+                            ]
+                        }
+                    },
+                    "additionalProperties": true
+                },
+                "component2": {
+                    "$id": "#/properties/components/properties/component2",
+                    "type": "object",
+                    "title": "The component2 schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": {},
+                    "examples": [
+                        {
+                            "name": "Engine",
+                            "reference": "GM"
+                        }
+                    ],
+                    "required": [
+                        "name",
+                        "reference"
+                    ],
+                    "properties": {
+                        "name": {
+                            "$id": "#/properties/components/properties/component2/properties/name",
+                            "type": "string",
+                            "title": "The name schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                "Engine"
+                            ]
+                        },
+                        "reference": {
+                            "$id": "#/properties/components/properties/component2/properties/reference",
+                            "type": "string",
+                            "title": "The reference schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                "GM"
+                            ]
+                        }
+                    },
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true
+        }
+    },
+    "additionalProperties": true
+}

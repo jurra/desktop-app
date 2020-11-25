@@ -2,18 +2,22 @@ import fs from 'fs'
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { cloneDeep } from 'lodash'
-import { state, getters, actions, mutations } from '../src/store/metadata'
+// import { state, getters, actions, mutations } from '../src/store/metadata'
 
 // Service used in actions
 import {
     buildsTemplate,
-    mkSchemasList
+    mkSchemasList,
+    extractProps
 } from '../src/utils/schemas'
 import { parsedComplexSchemaExample } from './outputExamples.js'
 
 const absoluteSchemaDir = "D:\\my-projects\\hardocs\\REPOS\\hardocs-vue-client\\tests\\fixtures\\sample-schemas\\"
 const schemaDir = './tests/fixtures/sample-schemas/'
 const selectedSchemaFile = 'project.schema.json'
+const schemasList = {
+    complex: 'complex_schema.json'
+}
 const schemasRef = [
     { title: 'The root schema', ref: 'person.json' },
     { title: 'Project', ref: 'project.schema.json' },
@@ -28,8 +32,9 @@ const schemasRef = [
  */
 describe("Json schemas loader and templates based on schemas", () => {
     describe("The utility library layer", () => {
-        it.only("Parse correctly json file",() => {
-            console.log(parsedComplexSchemaExample)
+        it.only("Extract props with additional items",() => {
+            // console.log(parsedComplexSchemaExample)
+            extractProps(schemasList.complex)
         })
 
         it("Generates lists available schemas in a path", async () => {
@@ -41,7 +46,7 @@ describe("Json schemas loader and templates based on schemas", () => {
         })
 
         it.only("converts json schema into a template that is a json object", () => {
-            let json = buildsTemplate(schemaDir, selectedSchemaFile)
+            let json = buildsTemplate(schemaDir, schemasList.complex)
             json = json.fields
             let mockObject = JSON.stringify({
                 "$schema": '',
