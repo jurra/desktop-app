@@ -10,7 +10,7 @@
 
           <button
             class="primary-button"
-            @click="selectFolder()"
+            @click="selectFile()"
             v-shortkey="['ctrl', 'shift', 's']"
             @shortkey="selectFolder()"
           >
@@ -77,6 +77,11 @@ export default {
     selectFolder() {
       this.$store.dispatch('setSchemasDir');
     },
+
+    selectFile(){
+      this.$store.dispatch('selectStandard');
+    },
+
     toggleOpen() {
       this.open = !this.open;
     },
@@ -87,14 +92,6 @@ export default {
       });
       this.toggleOpen();
     }
-
-    // FIXME: This should be a state action.....
-    // addData() {
-    //   let ComponentClass = Vue.extend(DataCell);
-    //   let instance = new ComponentClass();
-    //   instance.$mount(); // pass nothing
-    //   this.$refs.docPlace.appendChild(instance.$el);
-    // }
   }
 };
 </script>

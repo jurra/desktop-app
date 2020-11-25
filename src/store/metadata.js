@@ -2,10 +2,9 @@ import { mkSchemasList } from '../utils/schemas'
 // FIXME: Setup unit testing with electron
 import { 
     habitatLocal,
-    selectContentFromFolder 
 } from '@hardocs-project/habitat-client'
 import fs from 'fs'
-import { metadataExample } from '../../tests/fixtures/outputExamples'
+// import { metadataExample } from '../../tests/fixtures/outputExamples'
 import { promisify } from 'util' 
 // import Ajv from 'ajv';
 // let docs = context.rootState.instance.docs
@@ -19,7 +18,8 @@ export const state = {
     schemasDir: "",      // here goes a path
     schemasRef: [],
     hardocsJson: {},     // this is wrong
-    metadata:metadataExample,
+    dataSet:{},
+    metadata: {},
     
     /**
      * CONSIDERATION: What happens when the baseStandard changes,
@@ -46,9 +46,11 @@ export const mutations = {
     ADD_OBJECT(state, payload) {
         state.metadata.push(payload)
     },
+
     ADD_ROOT_SCHEMAS(state, schemasList) {
         state.schemasRef = schemasList
     },
+    
     SET_SCHEMAS_DIR(state, path) {
         state.schemasDir = path
     },
@@ -64,6 +66,20 @@ export const mutations = {
 }
 
 export const actions = {
+    async selectStandard(){
+        // TODO: check that the object has a set of properties...
+        // TODO: Otherwise throw an error, is not a valid json schema
+        console.log("Selecting standard")
+        // const dir = await habitatLocal.chooseFolderForUse() 
+        // commit('SET_STANDARD_DIR', dir)
+        // Get the filename...
+        // Open a file 
+        // dialog.showOpenDialog({ properties: ['openFile'] })
+        const baseStandard = await habitatLocal.selectContentFromFolder(['json'])
+        console.log(baseStandard)
+        // const baseStandard = readFile()
+    },
+
     /**
      * The user might have a standard in a folder, or in the internet.
      * The regular approach is that the standard lives in the internet.
@@ -72,7 +88,7 @@ export const actions = {
      * This action involves setting the dir, but also storing the base standard in 
      * the store.
      */
-    async setStandard({commit}, dirPath){
+    async setStandard({commit}){
         // TODO: check that the object has a set of properties...
         // TODO: Otherwise throw an error, is not a valid json schema
         
@@ -81,6 +97,7 @@ export const actions = {
         // Get the filename...
         // Open a file 
         const baseStandard = readFile()
+        console.log(baseStandard)
     
     },
 
@@ -136,7 +153,7 @@ export const actions = {
         commit('UPDATE_DATA_SET', newMetadata)
     },
 
-    async saveMetadata({state, commit},{ metadataPath, metadataFile }){
+    async saveMetadata({state, commit}, metadataFile){
         // On click fire up this action
         commit('SET_SAVED_METADATA', true)
         writeMetadataFile(metadataFile, state.metadata )

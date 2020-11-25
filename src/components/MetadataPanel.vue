@@ -53,7 +53,7 @@ export default {
     }),
     ...mapState({
       docs: state => state.docs,
-      dataSet: state => state.metadata.dataSet
+      dataSet: state => state.metadata.metadata
     }),
     data: {
       get: function() {
@@ -123,7 +123,7 @@ export default {
 
     // Listen to child emitted event to update the state based on new input
     async passDataFromEditor(input) {
-      return this.$store.dispatch('updateDataset', input)
+      return this.$store.dispatch('updateMetadata', input)
     }
   }
 };
