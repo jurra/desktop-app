@@ -5,7 +5,7 @@ import {
     habitatLocal,
 } from '@hardocs-project/habitat-client'
 import fs from 'fs'
-// import { metadataExample } from '../../tests/fixtures/outputExamples'
+import { metadataExample } from '../../tests/fixtures/outputExamples'
 import { promisify } from 'util' 
 // import Ajv from 'ajv';
 // let docs = context.rootState.instance.docs
@@ -68,6 +68,15 @@ export const mutations = {
 }
 
 export const actions = {
+    /**
+     * The user might have a standard in a folder, or in the internet.
+     * The regular approach is that the standard lives in the internet.
+     * In this case the jsonSchema standard should be taken from a url.
+     * We need to verify that is a jsonSchema.
+     * This action involves setting the dir, but also storing the base standard in 
+     * the store.
+     */
+
     async selectStandard({commit}){
         // TODO: check that the object has a set of properties...
         // TODO: Otherwise throw an error, is not a valid json schema
@@ -78,31 +87,6 @@ export const actions = {
         commit('SET_STANDARD_DIR', baseStandardPath)
         commit('SET_BASE_STANDARD', JSON.parse(baseStandard.content))
     },
-
-    /**
-     * The user might have a standard in a folder, or in the internet.
-     * The regular approach is that the standard lives in the internet.
-     * In this case the jsonSchema standard should be taken from a url.
-     * We need to verify that is a jsonSchema.
-     * This action involves setting the dir, but also storing the base standard in 
-     * the store.
-     */
-    async setStandard({commit}){
-        // TODO: check that the object has a set of properties...
-        // TODO: Otherwise throw an error, is not a valid json schema
-        
-        const dir = await habitatLocal.chooseFolderForUse() 
-        commit('SET_STANDARD_DIR', dir)
-        // Get the filename...
-        // Open a file 
-        const baseStandard = readFile()
-        console.log(baseStandard)
-    
-    },
-
-    // selectStandardFile(){
-
-    // },
 
     /**
      * We add a schema dir to provide the contexts of schemas relevant for this
@@ -133,23 +117,32 @@ export const actions = {
         commit('ADD_OBJECT', dataObject)
     },
 
-    async updateMetadata({ commit }, metadata) {
-        await commit('UPDATE_DATA_SET', metadata)
-        
-        // TODO: This should change to writeFile function 
-        createNewHardocsJson(this.state.docs, metadata)
+    async updateMetadata({ commit, dispatch }, metadata) {
+        console.log("Updating metadata")
+        // if(metadata){
+            await commit('UPDATE_DATA_SET', metadata)
+            // TODO: This should change to writeFile function 
+            dispatch('saveMetadata')
+        // }
+        // else {
+        //     dispatch('loadsMetadata')
+        // }
     },
 
     /**
      * When project is opened, then load the new metadata from hardocs.json
      */
-    async loadsMetadata({commit}){
-        let newMetadata = await JSON.parse(fs.readFileSync(`${this.state.docs.cwd}/.hardocs/hardocs.json`, 'utf8'))
-        if(!newMetadata.metadata){
-           newMetadata['metadata'] = {}
+    async loadsMetadata({commit, dispatch}){
+        let newMetadata
+        if(fs.existsSync(`${this.state.docs.cwd}/.hardocs/metadata.json`)){
+             newMetadata = await JSON.parse(fs.readFileSync(`${this.state.docs.cwd}/.hardocs/metadata.json`, 'utf8'))
+             commit('UPDATE_DATA_SET', newMetadata)
         }
-        else newMetadata = newMetadata.metadata
-        commit('UPDATE_DATA_SET', newMetadata)
+        else {
+            commit('UPDATE_DATA_SET', metadataExample)
+            dispatch('saveMetadata')
+            dispatch('loadsMetadata')
+        }
     },
 
     async saveMetadata({state, commit}){
@@ -183,7 +176,7 @@ export const getters = {
 
 
 /** TODO: This might live in utils Promisified file system operations */
-const readFile = promisify(fs.readFile)
+// const readFile = promisify(fs.readFile)
 
  
 export async function writeMetadataFile(metadataFile, metadata){
@@ -192,7 +185,7 @@ export async function writeMetadataFile(metadataFile, metadata){
 }
 
 
-async function createNewHardocsJson(generalMetadata, metadataObject) {
+export async function createNewHardocsJson(generalMetadata, metadataObject) {
     // FIXME: We should do json schema validation here
     if(Object.prototype.hasOwnProperty.call(generalMetadata, 'docsDir')){
         let newMetadataFile = {

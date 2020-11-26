@@ -1,3 +1,4 @@
+/*prettier-ignore*/
 import fs from 'fs'
 import path from 'path'
 
@@ -6,63 +7,40 @@ import path from 'path'
  *  
  *  
  */
-export function extractProps(schema) {
-    let result = {}
-    // Pointer to current reference in the result object
+// function traverseObject(obj, refNode) {
+//     if (typeof obj === 'string') obj = JSON.parse(obj)
+//     /**
+//      * Exception handling
+//      * How do we deal with anonymous objects...
+//      * What happens if the reference node is an array ??
+//      */
+//     if ('properties' in obj) {
+//         let props = schema.properties
+//         for (let prop in props) {
+//             const propObject = props[prop]
+//             refNode[prop] = propObject.default
 
-    // let referenceKey
-    
-    /**
-     * We need to parameters here
-     * A schema, and a pointer to the place where we wan to push the result
-     * 
-     */ 
-    function mainOperation(schema, refNode){
-        /**
-         * Exception handling
-         * How do we deal with anonymous objects...
-         * What happens if the reference node is an array ??
-         */
-        if ('properties' in schema) {
-            let props = schema.properties
-            for (let prop in props) {
-                const propObject = props[prop]
-    
-                // Check that the result object doesnt have the property
-                // If refNode is an object do this
-                // if(typeof propObject.default === 'object'){
-                //     console.log("type is an object")
-                    refNode[prop] = propObject.default
-                // }
-                // else if(typeof propObject.default === 'array'){
-                //     console.log("type is an array")
-                //     // refNode.push(props[prop])
-                // }
+//             if (propObject.additionalItems) {
+//                 // In this body we want to push inside the property
+//                 console.log("Reference Node array " + JSON.stringify(refNode))
+//                 // refNode = refNode[prop]
+//                 console.log("Property has additional Items")
+//                 // Recursion to extract nested schemas
+//                 // extractProps(propObject.items.anyOf[0]) // For the sake of simplicity we will get only the first item
+//                 traverseObject(propObject.items.anyOf[0], refNode)
+//             }
+//         }
+//     }
+//     return refNode
+// }
 
-
-                // Else if refNode is an array, do something else...
-                
-                // console.log("Reference Node with or without name: " + JSON.stringify(refNode))
-                
-                
-                if(propObject.additionalItems){
-                    // In this body we want to push inside the property
-                    console.log("Reference Node array " + JSON.stringify(refNode))
+// export function convertSchemaToJson(schema) {
+//     // var rootValue = schema["title"];
+//     var result = traverseObject(schema, schema);
+//     return JSON.stringify(result, null, "\t");
+// }
 
 
-                    // refNode = refNode[prop]
-                    console.log("Property has additional Items")
-                    // Recursion to extract nested schemas
-                    // extractProps(propObject.items.anyOf[0]) // For the sake of simplicity we will get only the first item
-                    mainOperation(propObject.items.anyOf[0], refNode)
-
-                }
-            }
-        }
-    }
-    mainOperation(schema, result)
-    console.log("Log the template result: " + JSON.stringify(result, null, 2))
-}
 
 // export function processProp(propName, propObject){
 //     // console.log(prop)
@@ -92,7 +70,7 @@ export function buildsTemplate(schemaDir, schemaFileName) {
         examples: []
     }
 
-    extractProps(schema)
+    // extractProps(schema)
 
     // Recursion on properties
     // If additionalItems == true then go a level down
@@ -162,6 +140,8 @@ export function mkSchemasList(folderPath) {
         }
     })
 }
+
+
 
 
 

@@ -1,35 +1,26 @@
-import fs, { readFile } from 'fs'
+// import fs, { readFile } from 'fs'
 import { createLocalVue } from '@vue/test-utils'
-// import { habitatLocal } from '@hardocs-project/habitat-client';
 
 import Vuex from 'vuex'
 import { cloneDeep } from 'lodash'
-import { state, getters, actions, mutations, writeMetadataFile } from '../src/store/metadata'
+// import { state, getters, actions, mutations, writeMetadataFile } from '../src/store/metadata'
 import { promisify } from 'util' 
 
-
-
-// Service used in actions
+import { convertSchemaToJson } from '../src/utils/schemaToJson.js'
 import {
     buildsTemplate,
-    mkSchemasList,
-    extractProps
+    // mkSchemasList,
+    // extractProps
 } from '../src/utils/schemas'
 import { metadataExample } from './fixtures/outputExamples.js'
 
-
+const baseDir = './tests/'
 const absoluteSchemaDir = "D:\\my-projects\\hardocs\\REPOS\\hardocs-vue-client\\tests\\fixtures\\sample-schemas\\"
 const schemaDir = './tests/fixtures/sample-schemas/'
 const selectedSchemaFile = 'project.schema.json'
 const schemasList = {
     complex: 'complex_schema.json'
 }
-const schemasRef = [
-    { title: 'The root schema', ref: 'person.json' },
-    { title: 'Project', ref: 'project.schema.json' },
-    { title: 'Vendor', ref: 'vendor.schema.json' }
-]
-
 
 
 /**
@@ -41,14 +32,28 @@ const schemasRef = [
  */
 describe("Json schemas loader and templates based on schemas", () => {
     describe("The utility library layer", () => {
-        it("Extract props with additional items",() => {
+        it.only("Extract props with additional items",async () => {
             // console.log(metadataExample)
-            extractProps(schemasList.complex)
+            const readFile = promisify(fs.readFile)
+            let schema = await readFile(schemaDir + schemasList.complex, "utf8")
+
+            // console.log(parsedSchema)
+            // extractProps(schema)
+        })
+
+        it("Generates json object from json schema", () => {
+            const schema = fs.readFileSync(`${baseDir}fixtures/sample-schemas/vendor.schema.json`, "utf8")
+            console.log(convertSchemaToJson(JSON.parse(schema)))
         })
 
         it("Generates lists available schemas in a path", async () => {
             let schemasList = await mkSchemasList(absoluteSchemaDir)
             // await console.log("Loading schemasdir " + JSON.stringify(mkSchemasList(absoluteSchemaDir, selectedSchemaFile)))
+            const schemasRef = [
+                { title: 'The root schema', ref: 'person.json' },
+                { title: 'Project', ref: 'project.schema.json' },
+                { title: 'Vendor', ref: 'vendor.schema.json' }
+            ]
 
             expect(schemasList.refSchemas).toEqual(schemasRef)
             // expect(schemasList.folderPath).toEqual(undefined) // FIXME: this should be passed from the state
@@ -92,11 +97,23 @@ describe("Json schemas loader and templates based on schemas", () => {
             }
         })
 
-        it("Creates a file in the expected path if it doesn't exist", async () => {
+        it("Initializes metadata path", async () => {
 
         })
 
-        it.only("Writes the metadata file to the projects folder", async () => {
+        it("Creates a file in the expected path if it doesn't exist", async () => {
+            /**
+             *  This should be part of loading the metadata set hardocs will try to read
+             *  a metadata, if the metadata doesnt exist then the file should be created,
+             *  Perhaps there can be a dialog stating there is no existing metadata file,
+             *  would you like to create one based on the existing standard?
+             * 
+             * */ 
+            
+            // Check for project and if .hardocs/metadata.json doesnt exist create one
+        })
+
+        it("Writes the metadata file to the projects folder", async () => {
             // This one only works if the file exists
             const filePath = "./tests/fixtures/destroy/metadata.json"
             const readFile = promisify(fs.readFile)

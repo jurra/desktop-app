@@ -181,8 +181,9 @@ export const actions = {
         await commit('LOAD_DOCS', formattedDocs)
         commit('SET_DOCS_FOLDER', response.data.openProject.docsDir)
         commit('SET_ENTRY_FILE', response.data.openProject.entryFile)
+        await dispatch('setCurrentDoc')
         dispatch('loadsMetadata')
-        dispatch('setCurrentDoc')
+
       }
       else {
         console.log('Invalid hardocs project')
