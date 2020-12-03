@@ -97,7 +97,7 @@ export const mutations = {
     newDoc.content = editedDoc.content
     newDoc.title = editedDoc.title
   },
-  
+
   SET_GUIDES(state, isActive){
     state.guidesIsActive = isActive
   }
@@ -163,11 +163,12 @@ export const actions = {
   },
 
   async loadProject({ commit, state, dispatch }) {
+    console.log('original state.cwd: ' + state.cwd)
     if (state.cwd) {
       let invalidProject = false
-      const response = await DocsServices.getProject(state.cwd).catch((e) => {  
+      const response = await DocsServices.getProject(state.cwd).catch((e) => {
         console.log(e)
-        invalidProject = true 
+        invalidProject = true
       })
       // console.log("Promise response: " + JSON.stringify(response))
       // console.log("Is invalid project?: " + JSON.stringify(invalidProject))
@@ -190,7 +191,7 @@ export const actions = {
         return window.alert('Cannot open invalid hardocs project. Select a hardocs project or create a new one')
       }
     }
-    
+
   },
 
   setCurrentDoc({ commit }, docId, index) {
@@ -302,7 +303,7 @@ export const getters = {
   },
 
   getDocsAmount:(state) => {
-    return state.allDocs.length 
+    return state.allDocs.length
   }
 }
 
@@ -318,7 +319,7 @@ ipcRenderer.on('checkUnsavedDocs', () => {
 
 // Must declare event because on render you receive an event and the data.
 // Here I should dispatch an action or maybe I should import the ipcRenderer in a component
-ipcRenderer.on('passAppPath', async (event, path) => { 
+ipcRenderer.on('passAppPath', async (event, path) => {
   console.log("Path coming from background process: " + path)
   await store.commit('SET_APP_PATH',path)
   await store.commit('SET_CWD', path)
@@ -342,7 +343,7 @@ function formatDocs(response, gqlAction) {
   response.data[gqlAction].allDocsData.map((doc) => {
     // create id
     idCount += 1
-    doc.id = idCount 
+    doc.id = idCount
 
     // Step 1: extract h1 only
     let regex = /<[^>].+?>(.*?)<\/.+?>/m;
