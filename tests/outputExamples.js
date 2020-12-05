@@ -20,6 +20,7 @@ const complexSchemaExample = {
   "buffalo pets": [
     {
       "parent": "the boss",
+      fromTemplate: '|#fromTemplate#|',
       "kids": [
         {
           "name": "curly"
@@ -27,10 +28,18 @@ const complexSchemaExample = {
           "name": "larry"
         }, {
           "name": "moe"
+        },
+        {
+          fromTemplate: '|#fromTemplate#|'
         }
       ]
     }
-  ]
+  ],
+  anObjectOnly: {
+    name: "I'm an object only",
+    description: 'see what I do with my flag',
+    fromTemplate: '|#fromTemplate#|'
+  }
 };
 
 export const parsedComplexSchemaExample = complexSchemaExample;
