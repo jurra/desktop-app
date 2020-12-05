@@ -8,8 +8,8 @@ const complexSchemaExample = {
     "name": "A component name",
     "reference": "A reference",
     "specs": [
-      "100 watts",
-      "fast and furious"
+      { power: "100 watts" },
+      { impression: "fast and furious" }
     ]
   }],
   "contributors": [{
