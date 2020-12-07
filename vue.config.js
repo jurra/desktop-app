@@ -30,14 +30,14 @@ module.exports = {
           category: 'System',
           icon: 'src/assets/logo.png'
         },
-        // win: {
-        //   target: 'nsis',
-        //   oneClick: true,
-        //   category: 'System',
-        //   installerIcon: 'src/assets/favicon.ico',
-        //   uninstallerIcon: 'src/assets/favicon.ico',
-        //   shortcutName: 'Hardocs'
-        // },
+        win: {
+         target: 'nsis',
+         oneClick: true,
+         category: 'System',
+         installerIcon: 'src/assets/favicon.ico',
+         uninstallerIcon: 'src/assets/favicon.ico',
+         shortcutName: 'Hardocs'
+        },
         mac: {
           category: 'public.app-category.utilities',
           target: 'dmg'
